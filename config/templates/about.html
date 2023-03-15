@@ -1,0 +1,54 @@
+{% block content %}
+<h1>SRCommand</h1>
+<p>
+    Use the game and category alias in the command format shown above to search for PBs
+    in that game.
+    <br>
+    <br>
+    The SRDC username is optional, and will default to the username setup by the streamer if one isn't provided.
+    If only a game is provided, a list of pbs in enabled categories will be returned. Note: this will only work for
+    the streamer's runs.
+</p>
+<h2>Command</h2>
+<p>
+    !pb game_alias [category_alias] [srdc_username]
+</p>
+<h2>Games & Category Options</h2>
+<table>
+    <th>
+        <tr>
+            <td>Game</td>
+            <td>Game alias(es)</td>
+            <td>Category alias(es)</td>
+        </tr>
+    </th>
+    {% for game in games %}
+    <tr>
+        <td>{{game.game_name}}</td>
+        <td>
+            {% for alias in game_aliases %}
+            {% if alias.game.game_code == game.game_code %}
+            {{alias.game_alias}};
+            {% endif %}
+            {% endfor %}
+        </td>
+
+        <td>
+            {% for category in categories %}
+            {% for alias in category_aliases %}
+            {% if alias.category.category_code == category.category_code and category.game.game_code == game.game_code%}
+            {{alias.category_alias}};
+            {% endif %}
+            {% endfor %}
+            {% endfor %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock content %}
+
+<h3>How do I set this up for my own channel?</h3>
+<p>
+    Visit the <a href="https://github.com/artfulinfo/srdctwitchbot">github repo</a> for download and setup
+    instructions.
+</p>

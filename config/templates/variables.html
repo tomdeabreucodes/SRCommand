@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Filters ({{ mygame.game_name }} - {{ mycategory.category_name }}) </h1>
+<a href="/config/{{mygame.game_code}}/categories/">← {{mygame.game_name}} categories</a>
+<h2>Currently applied filters</h2>
+<table>
+    <th>
+        <tr>
+            <td>Filter</td>
+            <td>Action</td>
+        </tr>
+    </th>
+    {% for filter in myvariables %}
+    <tr>
+        <td>
+            {{ filter.variable_name }} = {{ filter.variable_value_name }}
+        </td>
+        <td>
+            <form action="/config/{{mygame.game_code}}/categories/{{mycategory.id}}/filter/delete" method="get">
+                {% csrf_token %}
+                <input hidden="true" name="id" value="{{filter.id}}">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% include "warnings.html" %}
+<h2>Available filters</h2>
+<table>
+    <th>
+        <tr>
+            <td>Variable</td>
+            <td>Value</td>
+        </tr>
+    </th>
+
+    {% for variable in srdcvariables %}
+    <tr>
+        <td>
+            {{ variable.name }} ({{ variable.id }})
+        </td>
+        <td>
+            <form action="/config/{{mygame.game_code}}/categories/{{mycategory.id}}/filter/add" method="post">
+                {% csrf_token %}
+                {% for key, value in variable.values.values.items %}
+                <input type="radio" id="{{ key }}" name="variable_value" value="{{ key }},{{ value.label }}">
+                <label for="{{ value.label }}">{{ value.label }} ({{ key }})</label><br>
+                {% endfor %}
+                <input hidden="true" name="variable_code" value="{{ variable.id }}">
+                <input hidden="true" name="variable_name" value="{{ variable.name }}">
+                <input type="submit" value="Apply filter">
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock content %}

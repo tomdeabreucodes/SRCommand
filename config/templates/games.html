@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Games</h1>
+<h2>My games</h2>
+<table>
+    <th>
+        <tr>
+            <td>Name</td>
+            <td>Twitch command alias(es)</td>
+            <td>Actions</td>
+        </tr>
+    </th>
+    {% for mygame in mygames %}
+    <tr>
+        <td>{{ mygame.game_name }}</td>
+        <td>
+            <p>
+                {% for alias in aliases %}
+                {% if alias.game.game_code == mygame.game_code %}
+                {{ alias.game_alias }};
+                {% endif %}
+                {% endfor %}
+            </p>
+            <form action="/config/addalias" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="game" value="{{ mygame.game_code }}">
+                <input type="hidden" name="query" value="{{game_form.game_name.value|default_if_none:""}}">
+                {{ alias_form.game_alias }}
+                <input type="submit" value="Add">
+            </form>
+        </td>
+        <td>
+            <form action="/config/delete" method="get">
+                {% csrf_token %}
+                <input type="hidden" name="game_code" value="{{ mygame.game_code }}">
+                <input type="hidden" name="query" value="{{game_form.game_name.value|default_if_none:""}}">
+                <input type="submit" value="Delete game">
+            </form>
+            <form action="/config/deletealias" method="get">
+                {% csrf_token %}
+                <input type="hidden" name="game_code" value="{{ mygame.game_code }}">
+                <input type="hidden" name="query" value="{{game_form.game_name.value|default_if_none:""}}">
+                <input type="submit" value="Clear aliases">
+            </form>
+            <form action="/config/{{ mygame.game_code }}/categories/" method="get">
+                {% csrf_token %}
+                <button>Configure categories</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+<h2>Search SRDC games</h2>
+<p>The search returns top 10 matches based on the <a href="https://speedrun.com">speedrun.com</a> API.</p>
+<form action="/config/" method="get">
+    {% csrf_token %}
+    {{ game_form }}
+    <input type="submit" value="Search">
+</form>
+<h3>Results</h3>
+<table>
+    <th>
+        <tr>
+            <td>Cover</td>
+            <td>Name</td>
+            <td>Abbreviation</td>
+            <td>ID</td>
+            <td>Action</td>
+        </tr>
+    </th>
+    {% for srdcgame in srdcgames %}
+    <tr>
+        <td><img src="{{ srdcgame.assets.cover_tiny.uri }}" width="20px"></td>
+        <td>{{ srdcgame.names.international }}</td>
+        <td>{{ srdcgame.abbreviation }}</td>
+        <td>{{ srdcgame.id }}</td>
+        <td>
+            <form action="/config/add" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="game_code" value="{{ srdcgame.id }}">
+                <input type="hidden" name="game_name" value="{{ srdcgame.names.international }}">
+                <input type="hidden" name="game_abbreviation" value="{{ srdcgame.abbreviation }}">
+                <input type="hidden" name="query" value="{{game_form.game_name.value|default_if_none:""}}">
+                <input type="submit" value="Add">
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock content %}

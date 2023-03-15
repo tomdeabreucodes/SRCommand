@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Game: {{mygame.game_name}} ({{mygame.game_code}})</h1>
+<a href="/config/">← Games</a>
+<h2>My categories</h2>
+<table>
+    <th>
+        <tr>
+            <td>Name</td>
+            <td>Type</td>
+            <td>Level</td>
+            <td>Twitch command alias(es)</td>
+            <td>Actions</td>
+        </tr>
+    </th>
+    {% for mycategory in mycategories %}
+    {% if mycategory.game == mygame %}
+    <tr>
+        <td>{{ mycategory.category_name }}</td>
+        <td>{{ mycategory.category_type }}</td>
+        <td>
+            {% if mycategory.category_type == "per-level" %}
+            <form id="level_form_{{mycategory.id}}" action="/config/{{mygame.game_code}}/categories/changelevel"
+                method="get">
+                {% csrf_token %}
+                <input type="hidden" name="category" value="{{ mycategory.id }}">
+                <select name="level" onchange="level_form_{{mycategory.id}}.submit();">
+
+                    {% for level in srdclevels %}
+                    {% if level.id == mycategory.category_level %}
+                    <option value="{{level.id}}" selected>
+                        {{level.name}}
+                    </option>
+                    {% else %}
+                    <option value="{{level.id}}">{{level.name}}
+                    </option>
+                    {% endif %}
+                    {% endfor %}
+                </select>
+            </form>
+
+            {% else %}
+            N/A
+            {% endif %}
+
+        </td>
+        <td>
+            <p>
+                {% for alias in aliases %}
+                {% if alias.category.id == mycategory.id %}
+                {{ alias.category_alias }};
+                {% endif %}
+                {% endfor %}
+            </p>
+            <form action="/config/{{mygame.game_code}}/categories/addcategoryalias" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="category" value="{{ mycategory.id }}">
+                <input type="hidden" name="category_code" value="{{ mycategory.category_code }}">
+                {{ alias_form.category_alias }}
+                <input type="submit" value="Add">
+            </form>
+        </td>
+        <td>
+            <form action="/config/{{mygame.game_code}}/categories/deletecategory" method="get">
+                {% csrf_token %}
+                <input type="hidden" name="category" value="{{ mycategory.id }}">
+                <input type="submit" value="Delete category">
+            </form>
+            <form action="/config/{{mygame.game_code}}/categories/deletecategoryalias" method="get">
+                {% csrf_token %}
+                <input type="hidden" name="category" value="{{ mycategory.id }}">
+                <input type="submit" value="Clear aliases">
+            </form>
+            <form action="/config/{{ mygame.game_code }}/categories/{{ mycategory.id }}/filter/" method="get">
+                <button>Configure filters</button>
+            </form>
+        </td>
+    </tr>
+    {% endif %}
+    {% endfor %}
+</table>
+
+<h2>All SRDC categories</h2>
+<table>
+    <th>
+        <tr>
+            <td>Name</td>
+            <td>Type</td>
+            <td>Players</td>
+            <td>Miscellaneous</td>
+            <td>ID</td>
+            <td>Action</td>
+        </tr>
+    </th>
+    {% for srdccategory in srdccategories %}
+    <tr>
+        <td>{{ srdccategory.name }}</td>
+        <td>{{ srdccategory.type }}</td>
+        <td>{{ srdccategory.players.type }} {{srdccategory.players.value}} player(s)</td>
+        <td>{{ srdccategory.miscellaneous }}</td>
+        <td>{{ srdccategory.id }}</td>
+        <td>
+            <form action="/config/{{mygame.game_code}}/categories/add" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="game_code" value="{{mygame.game_code}}">
+                <input type="hidden" name="category_code" value="{{ srdccategory.id }}">
+                <input type="hidden" name="category_name" value="{{ srdccategory.name }}">
+                <input type="hidden" name="category_type" value="{{ srdccategory.type }}">
+                <input type="hidden" name="category_level" value="{{ srdclevels.0.id }}">
+                <input type="hidden" name="players_type" value="{{ srdccategory.players.type }}">
+                <input type="hidden" name="players_value" value="{{ srdccategory.players.value }}">
+                <input type="hidden" name="miscellaneous" value="{{ srdccategory.miscellaneous }}">
+                <input type="submit" value="Add">
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock content %}

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>User</h1>
+{% if curr_user %}
+<i>Current user: {{curr_user.srdc_user_name}}</i>
+{% endif %}
+<h2>Search</h2>
+<form action="/config/user/" method="get">
+    {% csrf_token %}
+    {{ user_form }}
+    <input type="submit" value="Search">
+</form>
+<table>
+    <th>
+        <tr>
+            <td>ID</td>
+            <td>Name</td>
+            <td>Action</td>
+        </tr>
+    </th>
+    {% for user in users %}
+    <tr>
+        <td>
+            {{user.id}}
+        </td>
+        <td>
+            {{user.names.international}}
+        </td>
+        <td>
+            <form action="/config/user/set" method="post">
+                {% csrf_token %}
+                <input hidden="true" name="my_user" value="{{user.id}}">
+                <input hidden="true" name="my_user_name" value="{{user.names.international}}">
+                <input type="hidden" name="query" value="{{user_form.srdc_username.value|default_if_none:""}}">
+                <input type="submit" value="Select">
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+
+</table>
+{% endblock content %}
