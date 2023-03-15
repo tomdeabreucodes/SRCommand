@@ -26,7 +26,8 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = []
+# Update with your own domain
+ALLOWED_HOSTS = ["srcommand.eu.pythonanywhere.com"]
 
 
 # Application definition
@@ -79,7 +80,7 @@ WSGI_APPLICATION = 'srdctwitchbot.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'db.sqlite3',
+        'NAME': '/home/srcommand/SRCommand/db.sqlite3',
     }
 }
 
@@ -119,6 +120,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = "/home/srcommand/SRCommand/static"  # Update with your username
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
