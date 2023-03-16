@@ -30,7 +30,7 @@ They have an excellent guide for getting started with an existing Django applica
 [Deploying an existing Django project on PythonAnywhere](https://help.pythonanywhere.com/pages/DeployExistingDjangoProject/)
 
 **Configuration Details**\
-Often these can be use 1:1, however certain steps may vary based on user specific factors. In these cases it will be indicated by placeholders e.g. `<PythonAnywhere-username>`. The `Section` column maps to the guide linked above for convenience.
+Often these can be used as 1:1 replacement, however certain steps may vary based on user-specific factors. In these cases it will be indicated by placeholders e.g. `<PythonAnywhere-username>`. The `Section` column maps to the guide linked above for convenience.
 
 | Section                              | Step                        | Location                                               | Action                                                                                                                                 |
 | ------------------------------------ | --------------------------- | ------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------- |
@@ -63,6 +63,7 @@ Now navigate to `<your-domain>.com/config/` and you're in.
 **Additional considerations**
 * In the repo, a dev_settings file is also provided, and a commented line to point django to this file in `manage.py`. Please do not use anything other than the server_settings in a live environment as it will not be secure.
 * Please also familiarise yourself with any warnings/guidance on the PythonAnywhere guide, as well as [Django's production checklist](https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/).
+* PythonAnywhere requires you to login occasionally and click `Run until 3 months from today` in your `Web` tab as a measure to avoid inactive free-tier apps running indefinitely. Keep an eye out for an email which should remind you to login when it is close to expiring
 
 **Troubleshooting**\
 Click `Web` and scroll down to `Logs`. The `Error log` is the most helpful tool in finding the cause of the site not loading.
