@@ -10,7 +10,7 @@ def main():
     # os.environ.setdefault('DJANGO_SETTINGS_MODULE',
     #                       'srdctwitchbot.dev_settings')
     os.environ.setdefault('DJANGO_SETTINGS_MODULE',
-                          'srdctwitchbot.production_settings')
+                          'srdctwitchbot.server_settings')
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:

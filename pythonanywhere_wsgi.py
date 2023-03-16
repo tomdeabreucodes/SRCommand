@@ -9,7 +9,7 @@ if path not in sys.path:
 
 load_dotenv(os.path.join(path, '.env'))
 
-os.environ['DJANGO_SETTINGS_MODULE'] = 'srdctwitchbot.production_settings'
+os.environ['DJANGO_SETTINGS_MODULE'] = 'srdctwitchbot.server_settings'
 
 # then:
 application = get_wsgi_application()
