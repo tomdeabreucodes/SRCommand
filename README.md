@@ -6,7 +6,7 @@ A self-hosted PB fetcher for speedrunners on streaming platforms, ideal for inte
 ## Contents
 [1. Features](#1-Features)\
 [2. Setup](#2-Setup)\
-[3. Usage](#3-Usage)
+[3. Usage](#3-Usage)\
 [4. Run Locally](#4-Run-Locally)
 
 ## 1. Features
