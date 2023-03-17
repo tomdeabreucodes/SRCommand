@@ -7,6 +7,7 @@ A self-hosted PB fetcher for speedrunners on streaming platforms, ideal for inte
 [1. Features](#1-Features)\
 [2. Setup](#2-Setup)\
 [3. Usage](#3-Usage)
+[4. Run Locally](#4-Run-Locally)
 
 ## 1. Features
 * Configuration GUI to add your desired games and categories
@@ -53,12 +54,12 @@ cd SRCommand
 python3 manage.py createsuperuser
 ```
 
-**Check its working**\
 By this point, everything should be in place for you to be able to start using the app.
 
-Navigate to `<your-domain>.com/admin/` and you should be able to login using the details created in the previous step.
+Navigate to `<your-domain>.com/admin/` and you should be able to login using the details created above.
 
-Now navigate to `<your-domain>.com/config/` and you're in.
+**Check its working**\
+Now navigate to `<your-domain>.com/config/` and if you see the Games page, you're in.
 
 **Additional considerations**
 * In the repo, a dev_settings file is also provided, and a commented line to point django to this file in `manage.py`. Please do not use anything other than the server_settings in a live environment as it will not be secure.
@@ -142,3 +143,51 @@ In the event of an invalid category or game alias being provided, the response w
 If the user, specified or default, does not have a pb in the game, the response will be `Someuser has no PBs in this game.`
 
 If you experience any other persistent errors for searches you know to be valid, you can try to debug it in your PythonAnywhere (or your platform of choice's) built-in logs. Feel free to raise as an issue.
+
+## 4. Run Locally
+**Pre-requisites**\
+_Python 3_\
+If you do not have a modern version of Python installed, you can get one from https://www.python.org/downloads/. You can check if you have Python installed by running `python3 --version` from terminal. SRCommand was developed on `3.10.6` but any modern version should work.
+
+**Clone the repo**\
+If you want to try out the app locally for testing or development purposes, a dedicated settings file has been created to enable this with ease.
+
+cd into your directory of choice and clone the repo to your machine.
+
+`git clone https://github.com/artfulinfo/SRCommand.git`
+
+Now, from your editor of choice, open `SRCommand/manage.py` and uncomment the line `os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'srdctwitchbot.dev_settings')`, then comment out the line directly below `os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'srdctwitchbot.server_settings')`. After editing the section should appear as below:
+```
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE',
+                          'srdctwitchbot.dev_settings')
+    # os.environ.setdefault('DJANGO_SETTINGS_MODULE',
+    #                       'srdctwitchbot.server_settings')
+```
+
+**Install dependencies**\
+Set up a virtual environment to install your dependencies in, activate it, and run the install.
+
+_mac/linux_
+```
+python3 -m venv venv
+source venv/bin/activate
+pip3 install -r requirements.txt
+```
+_windows_
+```
+python -m venv venv
+venv/scripts/activate
+pip install -r requirements.txt
+```
+**Setup the database**\
+Run `python3 manage.py migrate` to perform migrations, you will see a SQLite file appear in the project root.
+
+**Create superuser**\
+_See 2.i._\
+Between creating the user and testing if you can login, you'll need to run `python3 manage.py runserver`
+
+**Success**\
+If you're able to login and access the `/config/` in the local server, you are setup and should now be able to continue from section 2.ii onwards. with all of the core functionality.
+
+**Note**\
+As mentioned in section 2, please do not deploy with the `dev_settings` still applied as is is not secure. So if you decide to deploy your local version, switch back to `server_settings` in `manage.py`. Refer to the [Django's production checklist](https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/) for additional details/guidance.
